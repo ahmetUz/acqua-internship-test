@@ -53,8 +53,8 @@ export default function SmartBar({
   const handleSend = async () => {
     if (value === '') return;
 
-    const wantedItemInTodo = todoItems.find((item) => item === value);
-    const wantedItemInDone = doneItems.find((item) => item === value);
+    const wantedItemInTodo = todoItems.find((item) => item.task === value);
+    const wantedItemInDone = doneItems.find((item) => item.task === value);
 
     if (wantedItemInTodo) {
       setDoneItems((prev) => [...prev, wantedItemInTodo]);
