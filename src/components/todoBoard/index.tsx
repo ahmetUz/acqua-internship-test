@@ -64,7 +64,7 @@ export default function TodoBoard() {
       <div className="flex justify-center items-start gap-8 p-5">
         <ul
           ref={todoList}
-          className="bg-acqua-yellow rounded-lg p-4 shadow-md w-80 h-96"
+          className="bg-acqua-yellow rounded-lg p-4 shadow-md w-80 h-96 overflow-y-auto"
         >
           {todoItems.map((todo) => (
             <li className="p-2 bg-white rounded-lg shadow mb-2" key={todo}>
@@ -74,7 +74,7 @@ export default function TodoBoard() {
         </ul>
         <ul
           ref={doneList}
-          className="bg-acqua-darker-blue rounded-lg p-4 shadow-md w-80 text-white h-96"
+          className="bg-acqua-darker-blue rounded-lg p-4 shadow-md w-80 text-white h-96 overflow-y-auto"
         >
           {doneItems.map((done) => (
             <li
