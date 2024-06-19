@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { MdOutlineWaterDrop } from 'react-icons/md';
+import ReactLoading from 'react-loading';
 
 interface SmartBarProps {
   setTodoItems: Dispatch<SetStateAction<string[]>>;
@@ -14,8 +15,40 @@ export default function SmartBar({
   todoItems,
   doneItems,
 }: SmartBarProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [value, setValue] = useState('');
+
+  const askGpt = async (input: string) => {
+    setIsLoading(true);
+    const response = await fetch('/api/openai/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userInput: input,
+        todo: todoItems,
+        done: doneItems,
+      }),
+    });
+    if (response.ok) {
+      try {
+        const result = await response.json();
+        console.log(result.choices[0].message.content);
+        const data = JSON.parse(result.choices[0].message.content);
+        if (data.todo && data.done) {
+          setTodoItems(data.todo);
+          setDoneItems(data.done);
+        }
+      } catch (error) {
+        setError(true);
+      }
+    } else {
+      setError(true);
+    }
+    setIsLoading(false);
+  };
 
   const handleSend = async () => {
     if (value === '') return;
@@ -30,29 +63,9 @@ export default function SmartBar({
       setTodoItems((prev) => [...prev, wantedItemInDone]);
       setDoneItems((prev) => prev.filter((item) => item !== wantedItemInDone));
     } else {
-      setError(true);
+      askGpt(value);
     }
-
-    const response = await fetch('/api/openai/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userInput: value,
-        todo: todoItems,
-        done: doneItems,
-      }),
-    });
-    const result = await response.json();
-    handleGptResponse(result.choices[0].message.content);
     setValue('');
-  };
-
-  const handleGptResponse = (response: string) => {
-    const data = JSON.parse(response);
-    setTodoItems(data.todo);
-    setDoneItems(data.done);
   };
 
   return (
@@ -69,13 +82,19 @@ export default function SmartBar({
           error ? 'border-red-500' : ''
         }`}
       />
-      <button
-        onClick={handleSend}
-        className="bg-acqua-deep-blue hover:bg-acqua-darker-blue text-white p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out"
-        title="Send"
-      >
-        <MdOutlineWaterDrop className="text-xl" />
-      </button>
+      {isLoading ? (
+        <div className="bg-acqua-deep-blue hover:bg-acqua-darker-blue text-white p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out">
+          <ReactLoading type="bars" color="#ffffff" height={20} width={20} />
+        </div>
+      ) : (
+        <button
+          onClick={handleSend}
+          className="bg-acqua-deep-blue hover:bg-acqua-darker-blue text-white p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out"
+          title="Send"
+        >
+          <MdOutlineWaterDrop className="text-xl" />
+        </button>
+      )}
     </div>
   );
 }
