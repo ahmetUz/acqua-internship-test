@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface TaskStore {
-  todo: string[];
-  done: string[];
+  todoStore: string[];
+  doneStore: string[];
   setTodoStore: (items: string[]) => void;
   setDoneStore: (items: string[]) => void;
   initStore: () => void;
@@ -12,15 +12,15 @@ interface TaskStore {
 const useTaskStore = create(
   persist<TaskStore>(
     (set, get) => ({
-      todo: [],
-      done: [],
-      setTodoStore: (items) => set({ todo: items }),
-      setDoneStore: (items) => set({ done: items }),
+      todoStore: [],
+      doneStore: [],
+      setTodoStore: (items) => set({ todoStore: items }),
+      setDoneStore: (items) => set({ doneStore: items }),
       initStore: () => {
-        const { todo, done } = get();
-        if (todo.length === 0 && done.length === 0) {
+        const { todoStore, doneStore } = get();
+        if (todoStore.length === 0 && doneStore.length === 0) {
           set({
-            todo: [
+            todoStore: [
               'AI Fish or Phish',
               'Compile Coral DB',
               'AI Sub Navigation',
@@ -28,7 +28,7 @@ const useTaskStore = create(
               'Whale Song AI',
               'Marine Chatbot',
             ],
-            done: ['Dolphin Comm Sim'],
+            doneStore: ['Dolphin Comm Sim'],
           });
         }
       },
