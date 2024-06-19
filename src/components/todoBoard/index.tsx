@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import SmartBar from '@/components/smartBar';
 import useTaskStore from '@/stores/taskStore';
 import ReactLoading from 'react-loading';
+import { TaskTab } from '@/stores/taskStore';
 
 export default function TodoBoard() {
   const [isStoreInitialized, setIsStoreInitialized] = useState(false);
@@ -12,26 +13,27 @@ export default function TodoBoard() {
     useTaskStore();
   const [todoList, todoItems, setTodoItems] = useDragAndDrop<
     HTMLUListElement,
-    string
+    TaskTab
   >(todoStore, {
     group: 'todoList',
   });
   const [doneList, doneItems, setDoneItems] = useDragAndDrop<
     HTMLUListElement,
-    string
+    TaskTab
   >(doneStore, {
     group: 'todoList',
   });
 
   useEffect(() => {
     initStore();
+    setIsStoreInitialized(true);
   }, []);
 
   useEffect(() => {
+    if (!isStoreInitialized) return;
     setTodoItems(todoStore);
     setDoneItems(doneStore);
-    setIsStoreInitialized(true);
-  }, [todoStore, doneStore]);
+  }, [isStoreInitialized]);
 
   useEffect(() => {
     if (!isStoreInitialized) return;
@@ -67,8 +69,8 @@ export default function TodoBoard() {
           className="bg-acqua-yellow rounded-lg p-4 shadow-md w-80 h-96 overflow-y-auto"
         >
           {todoItems.map((todo) => (
-            <li className="p-2 bg-white rounded-lg shadow mb-2" key={todo}>
-              {todo}
+            <li className="p-2 bg-white rounded-lg shadow mb-2" key={todo.task}>
+              {todo.task}
             </li>
           ))}
         </ul>
@@ -79,9 +81,9 @@ export default function TodoBoard() {
           {doneItems.map((done) => (
             <li
               className="p-2 rounded-lg line-through decoration-acqua-retro-yellow decoration-2 shadow mb-2"
-              key={done}
+              key={done.task}
             >
-              {done}
+              {done.task}
             </li>
           ))}
         </ul>

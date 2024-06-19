@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { MdOutlineWaterDrop } from 'react-icons/md';
 import ReactLoading from 'react-loading';
+import { TaskTab } from '@/stores/taskStore';
 
 interface SmartBarProps {
-  setTodoItems: Dispatch<SetStateAction<string[]>>;
-  setDoneItems: Dispatch<SetStateAction<string[]>>;
-  todoItems: string[];
-  doneItems: string[];
+  setTodoItems: Dispatch<SetStateAction<TaskTab[]>>;
+  setDoneItems: Dispatch<SetStateAction<TaskTab[]>>;
+  todoItems: TaskTab[];
+  doneItems: TaskTab[];
 }
 
 export default function SmartBar({
@@ -35,7 +36,6 @@ export default function SmartBar({
     if (response.ok) {
       try {
         const result = await response.json();
-        console.log(result.choices[0].message.content);
         const data = JSON.parse(result.choices[0].message.content);
         if (data.todo && data.done) {
           setTodoItems(data.todo);
