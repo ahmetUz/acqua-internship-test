@@ -4,46 +4,52 @@ import { useDragAndDrop } from '@formkit/drag-and-drop/react';
 import { useState, useEffect } from 'react';
 import SmartBar from '@/components/smartBar';
 import useTaskStore from '@/stores/taskStore';
+import ReactLoading from 'react-loading';
 
 export default function TodoBoard() {
   const [isStoreInitialized, setIsStoreInitialized] = useState(false);
-  const { initStore, todo, done, setTodoStore, setDoneStore } = useTaskStore();
-
-  useEffect(() => {
-    initStore();
-    setIsStoreInitialized(true);
-  }, [initStore]);
-
+  const { initStore, todoStore, doneStore, setTodoStore, setDoneStore } =
+    useTaskStore();
   const [todoList, todoItems, setTodoItems] = useDragAndDrop<
     HTMLUListElement,
     string
-  >(todo, {
+  >(todoStore, {
     group: 'todoList',
   });
-
   const [doneList, doneItems, setDoneItems] = useDragAndDrop<
     HTMLUListElement,
     string
-  >(done, {
+  >(doneStore, {
     group: 'todoList',
   });
 
   useEffect(() => {
-    if (!isStoreInitialized) return;
-    setTodoItems(todo);
-    setDoneItems(done);
-  }, [todo, done]);
+    initStore();
+  }, []);
+
+  useEffect(() => {
+    setTodoItems(todoStore);
+    setDoneItems(doneStore);
+    setIsStoreInitialized(true);
+  }, [todoStore, doneStore]);
 
   useEffect(() => {
     if (!isStoreInitialized) return;
     setTodoStore(todoItems);
-  }, [todoItems]);
-
-  useEffect(() => {
-    if (!isStoreInitialized) return;
     setDoneStore(doneItems);
-  }, [doneItems]);
+  }, [doneItems, todoItems]);
 
+  if (!isStoreInitialized)
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-acqua-soft-white">
+        <ReactLoading
+          type="spinningBubbles"
+          color="#001D66"
+          height={50}
+          width={50}
+        />
+      </div>
+    );
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-acqua-soft-white">
       <h1 className="text-3xl font-bold text-acqua-deep-blue my-6">
