@@ -17,7 +17,7 @@ export default function SmartBar({
   const [error, setError] = useState(false);
   const [value, setValue] = useState('');
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (value === '') return;
 
     const wantedItemInTodo = todoItems.find((item) => item === value);
@@ -33,7 +33,26 @@ export default function SmartBar({
       setError(true);
     }
 
+    const response = await fetch('/api/openai/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userInput: value,
+        todo: todoItems,
+        done: doneItems,
+      }),
+    });
+    const result = await response.json();
+    handleGptResponse(result.choices[0].message.content);
     setValue('');
+  };
+
+  const handleGptResponse = (response: string) => {
+    const data = JSON.parse(response);
+    setTodoItems(data.todo);
+    setDoneItems(data.done);
   };
 
   return (

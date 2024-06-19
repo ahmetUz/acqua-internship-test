@@ -1,32 +1,48 @@
 'use client';
 
 import { useDragAndDrop } from '@formkit/drag-and-drop/react';
+import { useState, useEffect } from 'react';
 import SmartBar from '@/components/smartBar';
-
-const TODO_ITEMS = [
-  'AI Fish or Phish',
-  'Compile Coral DB',
-  'AI Sub Navigation',
-  'Server Water Cooling',
-  'Whale Song AI',
-  'Marine Chatbot',
-];
-
-const DONE_ITEMS = ['Dolphin Comm Sim'];
+import useTaskStore from '@/stores/taskStore';
 
 export default function TodoBoard() {
+  const [isStoreInitialized, setIsStoreInitialized] = useState(false);
+  const { initStore, todo, done, setTodoStore, setDoneStore } = useTaskStore();
+
+  useEffect(() => {
+    initStore();
+    setIsStoreInitialized(true);
+  }, [initStore]);
+
   const [todoList, todoItems, setTodoItems] = useDragAndDrop<
     HTMLUListElement,
     string
-  >(TODO_ITEMS, {
+  >(todo, {
     group: 'todoList',
   });
+
   const [doneList, doneItems, setDoneItems] = useDragAndDrop<
     HTMLUListElement,
     string
-  >(DONE_ITEMS, {
+  >(done, {
     group: 'todoList',
   });
+
+  useEffect(() => {
+    if (!isStoreInitialized) return;
+    setTodoItems(todo);
+    setDoneItems(done);
+  }, [todo, done, isStoreInitialized, setTodoItems, setDoneItems]);
+
+  useEffect(() => {
+    if (!isStoreInitialized) return;
+    setTodoStore(todoItems);
+  }, [isStoreInitialized, setTodoStore, todoItems]);
+
+  useEffect(() => {
+    if (!isStoreInitialized) return;
+    setDoneStore(doneItems);
+  }, [doneItems, isStoreInitialized, setDoneStore]);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-acqua-soft-white">
