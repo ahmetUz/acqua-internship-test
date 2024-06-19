@@ -32,17 +32,17 @@ export default function TodoBoard() {
     if (!isStoreInitialized) return;
     setTodoItems(todo);
     setDoneItems(done);
-  }, [todo, done, isStoreInitialized, setTodoItems, setDoneItems]);
+  }, [todo, done]);
 
   useEffect(() => {
     if (!isStoreInitialized) return;
     setTodoStore(todoItems);
-  }, [isStoreInitialized, setTodoStore, todoItems]);
+  }, [todoItems]);
 
   useEffect(() => {
     if (!isStoreInitialized) return;
     setDoneStore(doneItems);
-  }, [doneItems, isStoreInitialized, setDoneStore]);
+  }, [doneItems]);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-acqua-soft-white">
