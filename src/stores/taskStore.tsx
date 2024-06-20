@@ -30,32 +30,32 @@ const useTaskStore = create(
               {
                 taskGroup: 1,
                 task: 'AI Fish or Phish',
-                priority: 20,
+                priority: 0,
               },
               {
                 taskGroup: 2,
                 task: 'Compile Coral DB',
-                priority: 10,
+                priority: 0,
               },
               {
                 taskGroup: 3,
                 task: 'AI Sub Navigation',
-                priority: 15,
+                priority: 0,
               },
               {
                 taskGroup: 4,
                 task: 'Server Water Coolings',
-                priority: 5,
+                priority: 0,
               },
               {
                 taskGroup: 5,
                 task: 'Whale Song AI',
-                priority: 25,
+                priority: 0,
               },
               {
                 taskGroup: 6,
                 task: 'Marine Chatbot',
-                priority: 30,
+                priority: 0,
               },
             ],
             doneStore: [
