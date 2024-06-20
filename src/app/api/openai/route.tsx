@@ -38,7 +38,7 @@ function getPrompt(userIntent: UserIntent) {
 
   if (userIntent.removeTask) prompt = prompts.removeTask.prompt;
   else if (userIntent.moveLocation) prompt = prompts.moveLocation.prompt;
-  else if (userIntent.addTask) prompt = prompts.addTask.prompt;
+  else prompt = prompts.addTask.prompt;
   return prompt;
 }
 
