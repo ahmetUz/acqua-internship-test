@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { MdOutlineWaterDrop } from 'react-icons/md';
 import ReactLoading from 'react-loading';
-import { TaskTab } from '@/stores/taskStore';
+import { TaskInfo } from '@/stores/taskStore';
 
 interface SmartBarProps {
-  setTodoItems: Dispatch<SetStateAction<TaskTab[]>>;
-  setDoneItems: Dispatch<SetStateAction<TaskTab[]>>;
-  todoItems: TaskTab[];
-  doneItems: TaskTab[];
+  setTodoItems: Dispatch<SetStateAction<TaskInfo[]>>;
+  setDoneItems: Dispatch<SetStateAction<TaskInfo[]>>;
+  todoItems: TaskInfo[];
+  doneItems: TaskInfo[];
 }
 
 export default function SmartBar({
@@ -69,7 +69,7 @@ export default function SmartBar({
   };
 
   return (
-    <div className="flex items-center gap-4 p-4 bg-acqua-soft-white">
+    <div className="flex items-center gap-4 p-4 bg-dark-monster">
       <input
         type="text"
         value={value}
@@ -78,19 +78,26 @@ export default function SmartBar({
           setValue(event.target.value);
         }}
         placeholder="Type something..."
-        className={`flex-1 p-2 text-base border rounded-lg border-gray-300 ${
-          error ? 'border-red-500' : ''
-        }`}
+        className={`flex-1 p-2 text-base border rounded-lg border-gray-300 `}
+        style={
+          error
+            ? { borderColor: 'red', borderWidth: '3px', borderStyle: 'solid' }
+            : {}
+        }
       />
       {isLoading ? (
-        <div className="bg-acqua-deep-blue hover:bg-acqua-darker-blue text-white p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out">
+        <div
+          className="bg-acqua-deep-blue hover:bg-acqua-darker-blue text-white p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out"
+          style={{ backgroundColor: '#1c64fd3a' }}
+        >
           <ReactLoading type="bars" color="#ffffff" height={20} width={20} />
         </div>
       ) : (
         <button
           onClick={handleSend}
-          className="bg-acqua-deep-blue hover:bg-acqua-darker-blue text-white p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out"
+          className="hover:bg-acqua-darker-blue text-white p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out"
           title="Send"
+          style={{ backgroundColor: '#1c64fd3a' }}
         >
           <MdOutlineWaterDrop className="text-xl" />
         </button>

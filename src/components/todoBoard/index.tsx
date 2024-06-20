@@ -1,11 +1,13 @@
 'use client';
 
+import './style.css';
+import ReactLoading from 'react-loading';
 import { useDragAndDrop } from '@formkit/drag-and-drop/react';
 import { useState, useEffect } from 'react';
 import SmartBar from '@/components/smartBar';
+import { TaskInfo } from '@/stores/taskStore';
 import useTaskStore from '@/stores/taskStore';
-import ReactLoading from 'react-loading';
-import { TaskTab } from '@/stores/taskStore';
+import Task from '@/components/task';
 
 export default function TodoBoard() {
   const [isStoreInitialized, setIsStoreInitialized] = useState(false);
@@ -13,13 +15,13 @@ export default function TodoBoard() {
     useTaskStore();
   const [todoList, todoItems, setTodoItems] = useDragAndDrop<
     HTMLUListElement,
-    TaskTab
+    TaskInfo
   >(todoStore, {
     group: 'todoList',
   });
   const [doneList, doneItems, setDoneItems] = useDragAndDrop<
     HTMLUListElement,
-    TaskTab
+    TaskInfo
   >(doneStore, {
     group: 'todoList',
   });
@@ -43,20 +45,18 @@ export default function TodoBoard() {
 
   if (!isStoreInitialized)
     return (
-      <div className="flex justify-center items-center min-h-screen bg-acqua-soft-white">
+      <div className="flex justify-center items-center min-h-screen bg-dark-monster">
         <ReactLoading
           type="spinningBubbles"
-          color="#001D66"
+          color="#ffffff"
           height={50}
           width={50}
         />
       </div>
     );
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-acqua-soft-white">
-      <h1 className="text-3xl font-bold text-acqua-deep-blue my-6">
-        Acqua Board
-      </h1>
+    <div className="flex flex-col justify-center items-center min-h-screen bg-dark-monster">
+      <h1 className="title"> Acqua Board </h1>
       <SmartBar
         todoItems={todoItems}
         doneItems={doneItems}
@@ -64,27 +64,14 @@ export default function TodoBoard() {
         setDoneItems={setDoneItems}
       />
       <div className="flex justify-center items-start gap-8 p-5">
-        <ul
-          ref={todoList}
-          className="bg-acqua-yellow rounded-lg p-4 shadow-md w-80 h-96 overflow-y-auto"
-        >
+        <ul ref={todoList} className="todo-board">
           {todoItems.map((todo) => (
-            <li className="p-2 bg-white rounded-lg shadow mb-2" key={todo.task}>
-              {todo.task}
-            </li>
+            <Task key={todo.task} task={todo} isDone={false} />
           ))}
         </ul>
-        <ul
-          ref={doneList}
-          className="bg-acqua-darker-blue rounded-lg p-4 shadow-md w-80 text-white h-96 overflow-y-auto"
-        >
-          {doneItems.map((done) => (
-            <li
-              className="p-2 rounded-lg line-through decoration-acqua-retro-yellow decoration-2 shadow mb-2"
-              key={done.task}
-            >
-              {done.task}
-            </li>
+        <ul ref={doneList} className="done-board">
+          {doneItems.map((done, index) => (
+            <Task key={index} task={done} isDone={true} />
           ))}
         </ul>
       </div>
